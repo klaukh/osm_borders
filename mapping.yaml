@@ -1,0 +1,105 @@
+# defining and switching up common table names for easier processing and reference
+name_field: &name
+  name: name
+  key: name
+  type: string
+name_en_field: &name_en
+  name: name_en
+  key: name:en
+  type: string
+natural_field: &natural
+  name: natural
+  key: natural
+  type: string
+boundary_field: &boundary
+  key: boundary
+  name: boundary
+  type: string
+admin_level_field: &admin_level
+  key: admin_level
+  name: admin_level
+  type: integer
+member_field: &member_id
+  name: member_id
+  type: member_id
+member_index_field: &member_index
+  name: member_index
+  type: member_index
+role_field: &role
+  name: role
+  type: member_role
+type_field: &type
+  name: type
+  type: member_type
+z_order_field: &z_order
+  name: z_order
+  type: wayzorder
+way_area_field: &way_area
+  name: way_area
+  type: webmerc_area
+
+# since the file has already been narrowly filtered, we'll accept everything
+tables:
+  boundary:
+    type: relation
+    filter:
+        require_regexp:
+            admin_level: '^\D$'
+    mapping:
+      boundary: [__any__]
+    fields:
+    - name: osm_id
+      type: id
+    - *name
+    - *name_en
+    - *admin_level
+    - *boundary
+  boundaries:
+    type: relation_member
+    filter:
+        require_regexp:
+            admin_level: '^\D$'
+        reject:
+            border_type: [eez]
+    mapping:
+      boundary: [__any__]
+    fields:
+    - name: osm_id
+      type: id
+    - *boundary
+    - *name
+    - *name_en
+    - *member_id
+    - *member_index
+    - *role
+    - *type
+    - name: member_name
+      key: name
+      type: string
+      from_member: true
+    - name: member_name_en
+      key: name:en
+      type: string
+      from_member: true
+    - name: natural
+      key: natural
+      type: string
+      from_member: true
+    - name: maritime
+      key: maritime
+      type: string
+      from_member: true
+    - name: disputed
+      key: disputed
+      type: string
+      from_member: true
+    - name: dispute
+      key: dispute
+      type: string
+      from_member: true
+    - name: border_type
+      key: border_type
+      type: string
+      from_member: true
+    - name: geometry
+      type: geometry
